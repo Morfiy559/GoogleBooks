@@ -17,7 +17,6 @@ class SearchAreaAPI extends React.Component {
     onQueryChange = (e) => {
         let text = e.target.value;
         this.props.updateNewQuery(text);
-
     }
     getBooks = () => {
         this.props.toggleIsFetching(true);
