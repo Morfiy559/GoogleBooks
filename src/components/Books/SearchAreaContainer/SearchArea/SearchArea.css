@@ -1,0 +1,44 @@
+.search-area-wrapper{
+    width: 100%;
+    color: white;
+    background: url("../../../../assets/images/background.jpg") center center/cover no-repeat;
+}
+.search-area{
+    max-width: 40% !important;
+}
+@media(max-width: 425px){
+    .search-area{
+        max-width: 80% !important;
+    }
+}
+header{
+    display: flex;
+    justify-content: center;
+}
+.search{
+    display: flex;
+    height: 22px;
+    position: relative;
+    justify-content: center;
+}
+input{
+    width: 100%;
+}
+.search-button{
+    background-color: transparent;
+    position: absolute;
+    border: 0;
+    height: 100%;
+    right: 0;
+}
+
+#loupe{
+    cursor: pointer;
+
+    height: 80%;
+    background-color: #fff;
+}
+label{
+    display: flex;
+    justify-content: center;
+}

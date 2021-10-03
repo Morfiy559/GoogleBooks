@@ -1,0 +1,10 @@
+.totalBooksCount{
+    text-align: center;
+}
+.buttonCont{
+    display: flex;
+    justify-content: center;
+}
+.BookListButton{
+    background-color: #f3a922;
+}
