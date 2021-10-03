@@ -27,7 +27,6 @@ class BookListAPI extends React.Component {
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${this.props.query}&maxResults=${this.props.maxResults}&startIndex=${this.props.startIndex}&orderBy=${this.props.sortingType}&key=${this.props.k}`
         ).then(
             response => {
-                console.log(response);
                 this.props.toggleIsFetching(false);
                 this.props.setStartIndex(this.props.startIndex + 30);
                 this.props.loadMoreBooks(response.data.items);

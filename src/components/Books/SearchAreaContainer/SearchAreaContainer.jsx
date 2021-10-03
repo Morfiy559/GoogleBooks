@@ -17,7 +17,6 @@ class SearchAreaAPI extends React.Component {
     onQueryChange = (e) => {
         let text = e.target.value;
         this.props.updateNewQuery(text);
-        console.log(text)
 
     }
     getBooks = () => {
@@ -25,7 +24,6 @@ class SearchAreaAPI extends React.Component {
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${this.props.query}${this.props.category === 'all' ? '' : '+subject:' + this.props.category}&maxResults=${this.props.maxResults}&orderBy=${this.props.sortingType}&key=${this.props.k}`
         ).then(
             response => {
-                console.log(response);
                 this.props.toggleIsFetching(false);
                 this.props.setPage('list');
                 this.props.setBooks(response.data.items === undefined ? [] : response.data.items);
