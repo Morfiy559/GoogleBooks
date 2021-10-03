@@ -1,9 +1,13 @@
 .bookImage{
-    width:100%;
+    /*width:100%;*/
     max-width: 300px;
     margin-top: 1em;
+    margin-bottom: 1em;
+    max-height: 400px;
+    box-shadow: 11px 12px 14px 0px rgba(34, 60, 80, 0.25);
 }
 .bookImageCont{
     display: flex;
     justify-content: center;
+    background-color: #eaecdd;
 }
