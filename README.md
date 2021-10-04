@@ -19,3 +19,10 @@ The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+###Используя боевой Docker-файл, создаём и называем образ:
+
+`$ docker build -f Dockerfile.prod -t sample:prod .`
+
+###Запускаем контейнер:
+
+`$ docker run -it --rm -p 1337:80 sample:prod` Отправляемся в http://localhost:1337/ в вашем браузере, чтобы увидеть приложение.
