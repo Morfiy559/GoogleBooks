@@ -19,7 +19,12 @@ class SearchAreaAPI extends React.Component {
         this.props.updateNewQuery(text);
     }
     getBooks = () => {
+        if (this.props.query === '') {
+            alert('Введите строку запроса');
+            return;
+        }
         this.props.toggleIsFetching(true);
+
         axios.get(`https://www.googleapis.com/books/v1/volumes?q=${this.props.query}${this.props.category === 'all' ? '' : '+subject:' + this.props.category}&maxResults=${this.props.maxResults}&orderBy=${this.props.sortingType}&key=${this.props.k}`
         ).then(
             response => {
@@ -28,7 +33,7 @@ class SearchAreaAPI extends React.Component {
                 this.props.setBooks(response.data.items === undefined ? [] : response.data.items);
                 this.props.setTotalBooksCount(response.data.totalItems);
                 this.props.setStartIndex(31);
-                if(response.data.totalItems===0)alert(`По вашему запросу ${this.props.query} книг не найдено.`);
+                if (response.data.totalItems === 0) alert(`По вашему запросу ${this.props.query} книг не найдено.`);
             }
         )
     }
@@ -65,7 +70,7 @@ let mapStateToProps = (state) => {
         maxResults: state.booksPage.maxResults,
         category: state.booksPage.category,
         sortingType: state.booksPage.sortingType,
-        k:state.booksPage.k
+        k: state.booksPage.k
     }
 }
 const SearchAreaContainer = connect(mapStateToProps, {
