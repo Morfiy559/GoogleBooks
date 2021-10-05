@@ -1,3 +1,5 @@
+import {BookListAPI, SearchAreaAPI} from "../components/API/api";
+
 const SET_BOOKS = 'SET_BOOKS';
 const SET_TOTAL_BOOKS_COUNT = 'SET_TOTAL_BOOKS_COUNT';
 const TOGGLE_IS_FETCHING = 'TOGGLE_IS_FETCHING';
@@ -8,30 +10,31 @@ const SET_START_INDEX = 'SET_START_INDEX';
 const SET_SORTING_TYPE = 'SET_SORTING_TYPE';
 const SET_BOOK = 'SET_BOOK';
 const PAGE = 'PAGE';
+
 let initialState = {
-    books:[],
-    pageSize:30,
-    totalBooksCount:0,
-    isFetching:false,
-    query:'',
-    maxResults:30,
-    category:'all',
-    startIndex:31,
-    sortingType:'relevance',
-    book:0,
-    page:'list',
-    k:'AIzaSyBIKTik4HMz17K2L14Wooy1GhlYFOA_WO4'
+    books: [],
+    pageSize: 30,
+    totalBooksCount: 0,
+    isFetching: false,
+    query: '',
+    maxResults: 30,
+    category: 'all',
+    startIndex: 31,
+    sortingType: 'relevance',
+    book: 0,
+    page: 'list',
+    k: 'AIzaSyBIKTik4HMz17K2L14Wooy1GhlYFOA_WO4'
 }
 
-const booksReducer = (state = initialState, action)=>{
+const booksReducer = (state = initialState, action) => {
 
-    switch (action.type){
+    switch (action.type) {
         case SET_BOOKS:
             return {
                 ...state,
-                books:[...action.books]
+                books: [...action.books]
 
-        };
+            };
         case SET_TOTAL_BOOKS_COUNT:
             return {
                 ...state,
@@ -55,7 +58,7 @@ const booksReducer = (state = initialState, action)=>{
         case SET_CATEGORY:
             return {
                 ...state,
-                category:action.category
+                category: action.category
             };
         case SET_START_INDEX:
             return {
@@ -70,27 +73,56 @@ const booksReducer = (state = initialState, action)=>{
         case SET_BOOK:
             return {
                 ...state,
-                book:action.book
+                book: action.book
             };
         case PAGE:
             return {
                 ...state,
-                page:action.page
+                page: action.page
             }
         default:
             return state;
     }
 }
 
-export const setBooks=(books)=>({type:SET_BOOKS,books});
-export const setTotalBooksCount=(count)=>({type:SET_TOTAL_BOOKS_COUNT, count});
-export const toggleIsFetching=(isFetching)=>({type:TOGGLE_IS_FETCHING, isFetching});
-export const updateNewQuery=(query)=>({type:UPDATE_NEW_QUERY, query});
-export const loadMoreBooks=(books)=>({type:LOAD_MORE,books});
-export const setCategory=(category)=>({type:SET_CATEGORY,category});
-export const setStartIndex=(index)=>({type:SET_START_INDEX,index});
-export const setSortingType=(sortingType)=>({type:SET_SORTING_TYPE,sortingType});
-export const setBook=(book)=>({type:SET_BOOK,book});
-export const setPage=(page)=>({type:PAGE,page});
+export const setBooks = (books) => ({type: SET_BOOKS, books});
+export const setTotalBooksCount = (count) => ({type: SET_TOTAL_BOOKS_COUNT, count});
+export const toggleIsFetching = (isFetching) => ({type: TOGGLE_IS_FETCHING, isFetching});
+export const updateNewQuery = (query) => ({type: UPDATE_NEW_QUERY, query});
+export const loadMoreBooksSuccess = (books) => ({type: LOAD_MORE, books});
+export const setCategory = (category) => ({type: SET_CATEGORY, category});
+export const setStartIndex = (index) => ({type: SET_START_INDEX, index});
+export const setSortingType = (sortingType) => ({type: SET_SORTING_TYPE, sortingType});
+export const setBook = (book) => ({type: SET_BOOK, book});
+export const setPage = (page) => ({type: PAGE, page});
 
+export const getBooks = (query, category, maxResults, sortingType, k) => {
+    return (dispatch) => {
+        dispatch(toggleIsFetching(true));
+        SearchAreaAPI.getBooks(query, category, maxResults, sortingType, k)
+            .then(
+                data => {
+                    dispatch(toggleIsFetching(false));
+                    dispatch(setPage('list'));
+                    dispatch(setBooks(data.items === undefined ? [] : data.items));
+                    dispatch(setTotalBooksCount(data.totalItems));
+                    dispatch(setStartIndex(31));
+                }
+            )
+    }
+}
+
+export const loadMoreBooks = (query, maxResults, startIndex, sortingType, k) => {
+    return (dispatch) => {
+        dispatch(toggleIsFetching(true));
+        BookListAPI.loadMore(query, maxResults, startIndex, sortingType, k)
+            .then(
+                data => {
+                    dispatch(toggleIsFetching(false));
+                    dispatch(setStartIndex(startIndex + 30));
+                    dispatch(loadMoreBooksSuccess(data.items));
+                }
+            )
+    }
+}
 export default booksReducer;

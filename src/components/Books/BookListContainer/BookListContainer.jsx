@@ -6,10 +6,7 @@ import {
     setBook,
     setPage,
     setSortingType,
-    setStartIndex,
-    toggleIsFetching
 } from "../../../redux/books-reducer";
-import {BookListAPI} from "../../API/api";
 
 let BookListContainer = (props) => {
 
@@ -22,29 +19,21 @@ let BookListContainer = (props) => {
         if (props.startIndex + 30 > props.totalBooksCount) {
             alert('Книги закончились');
             return;
-            props.toggleIsFetching(true);
-            BookListAPI.loadMore(props.query, props.maxResults, props.startIndex, props.sortingType, props.k)
-                .then(
-                    data => {
-                        props.toggleIsFetching(false);
-                        props.setStartIndex(props.startIndex + 30);
-                        props.loadMoreBooks(data.items);
-                    }
-                )
-
         }
+        props.loadMoreBooks(props.query, props.maxResults, props.startIndex, props.sortingType, props.k);
     }
-        return (
-            <>
-                <BookList
-                    loadMore={loadMore}
-                    changePage={changePage}
-                    books={props.books}
-                    totalBooksCount={props.totalBooksCount}
-                    isFetching={props.isFetching}
-                />
-            </>
-        )
+
+    return (
+        <>
+            <BookList
+                loadMore={loadMore}
+                changePage={changePage}
+                books={props.books}
+                totalBooksCount={props.totalBooksCount}
+                isFetching={props.isFetching}
+            />
+        </>
+    )
 
 }
 
@@ -63,6 +52,5 @@ let mapStateToProps = (state) => {
 
 
 export default connect(mapStateToProps, {
-    loadMoreBooks, toggleIsFetching, setStartIndex,
-    setSortingType, setPage, setBook
+    loadMoreBooks, setSortingType, setPage, setBook,
 })(BookListContainer);
