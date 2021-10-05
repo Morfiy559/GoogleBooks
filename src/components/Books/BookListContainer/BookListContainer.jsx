@@ -9,45 +9,43 @@ import {
     setStartIndex,
     toggleIsFetching
 } from "../../../redux/books-reducer";
-import * as axios from "axios";
+import {BookListAPI} from "../../API/api";
 
-class BookListAPI extends React.Component {
+let BookListContainer = (props) => {
 
-    changePage = (bookId) => {
-        this.props.setBook(bookId);
-        this.props.setPage('book');
+    let changePage = (bookId) => {
+        props.setBook(bookId);
+        props.setPage('book');
     }
 
-    loadMore = () => {
-        if (this.props.startIndex + 30 > this.props.totalBooksCount) {
+    let loadMore = () => {
+        if (props.startIndex + 30 > props.totalBooksCount) {
             alert('Книги закончились');
             return;
+            props.toggleIsFetching(true);
+            BookListAPI.loadMore(props.query, props.maxResults, props.startIndex, props.sortingType, props.k)
+                .then(
+                    data => {
+                        props.toggleIsFetching(false);
+                        props.setStartIndex(props.startIndex + 30);
+                        props.loadMoreBooks(data.items);
+                    }
+                )
+
         }
-        this.props.toggleIsFetching(true);
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${this.props.query}&maxResults=${this.props.maxResults}&startIndex=${this.props.startIndex}&orderBy=${this.props.sortingType}&key=${this.props.k}`
-        ).then(
-            response => {
-                this.props.toggleIsFetching(false);
-                this.props.setStartIndex(this.props.startIndex + 30);
-                this.props.loadMoreBooks(response.data.items);
-            }
-        )
-
     }
-
-    render() {
         return (
             <>
                 <BookList
-                    loadMore={this.loadMore}
-                    changePage={this.changePage}
-                    books={this.props.books}
-                    totalBooksCount={this.props.totalBooksCount}
-                    isFetching={this.props.isFetching}
+                    loadMore={loadMore}
+                    changePage={changePage}
+                    books={props.books}
+                    totalBooksCount={props.totalBooksCount}
+                    isFetching={props.isFetching}
                 />
             </>
         )
-    }
+
 }
 
 let mapStateToProps = (state) => {
@@ -63,8 +61,8 @@ let mapStateToProps = (state) => {
     }
 }
 
-const BookListContainer = connect(mapStateToProps, {
+
+export default connect(mapStateToProps, {
     loadMoreBooks, toggleIsFetching, setStartIndex,
     setSortingType, setPage, setBook
-})(BookListAPI);
-export default BookListContainer;
+})(BookListContainer);

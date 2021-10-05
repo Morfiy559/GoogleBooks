@@ -3,31 +3,28 @@ import {connect} from "react-redux";
 import {setBook} from "../../../redux/books-reducer";
 import Book from "./Book/Book";
 
-class BookApi extends React.Component{
+let BookContainer = (props) => {
 
-    render() {
-        return(
-            <Book
-                title={this.props.books[this.props.book].volumeInfo.title}
-                image={this.props.books[this.props.book].volumeInfo.imageLinks.thumbnail}
-                categories={this.props.books[this.props.book].volumeInfo.categories}
-                authors={this.props.books[this.props.book].volumeInfo.authors}
-                description={this.props.books[this.props.book].volumeInfo.description}
-            />
-        );
-    }
-
+    return (
+        <Book
+            title={props.books[props.book].volumeInfo.title}
+            image={props.books[props.book].volumeInfo.imageLinks.thumbnail}
+            categories={props.books[props.book].volumeInfo.categories}
+            authors={props.books[props.book].volumeInfo.authors}
+            description={props.books[props.book].volumeInfo.description}
+        />
+    );
 }
 
-let mapStateToProps = (state) =>{
-    return{
+
+let mapStateToProps = (state) => {
+    return {
         books: state.booksPage.books,
-        query:state.booksPage.query,
-        book:state.booksPage.book
+        query: state.booksPage.query,
+        book: state.booksPage.book
     }
 }
 
-let BookContainer = connect(mapStateToProps,{setBook})(BookApi);
-export default BookContainer;
+export default connect(mapStateToProps, {setBook})(BookContainer);
 
 

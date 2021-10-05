@@ -10,58 +10,57 @@ import {
     toggleIsFetching,
     updateNewQuery
 } from "../../../redux/books-reducer";
+import {SearchAreaAPI} from "../../API/api";
 
-class SearchAreaAPI extends React.Component {
+let SearchAreaContainer = (props) => {
 
 
-    onQueryChange = (e) => {
+    let onQueryChange = (e) => {
         let text = e.target.value;
-        this.props.updateNewQuery(text);
+        props.updateNewQuery(text);
     }
-    getBooks = () => {
-        if (this.props.query === '') {
+    let getBooks = () => {
+        if (props.query === '') {
             alert('Введите строку запроса');
             return;
         }
-        this.props.toggleIsFetching(true);
-
-        axios.get(`https://www.googleapis.com/books/v1/volumes?q=${this.props.query}${this.props.category === 'all' ? '' : '+subject:' + this.props.category}&maxResults=${this.props.maxResults}&orderBy=${this.props.sortingType}&key=${this.props.k}`
-        ).then(
-            response => {
-                this.props.toggleIsFetching(false);
-                this.props.setPage('list');
-                this.props.setBooks(response.data.items === undefined ? [] : response.data.items);
-                this.props.setTotalBooksCount(response.data.totalItems);
-                this.props.setStartIndex(31);
-                if (response.data.totalItems === 0) alert(`По вашему запросу ${this.props.query} книг не найдено.`);
+        props.toggleIsFetching(true);
+        SearchAreaAPI.getBooks(props.query,props.category,props.maxResults,props.sortingType,props.k)
+            .then(
+            data => {
+                props.toggleIsFetching(false);
+                props.setPage('list');
+                props.setBooks(data.items === undefined ? [] : data.items);
+                props.setTotalBooksCount(data.totalItems);
+                props.setStartIndex(31);
+                if (data.totalItems === 0) alert(`По вашему запросу ${this.props.query} книг не найдено.`);
             }
         )
     }
-    onKeyDown = (e) => {
-        if (e.keyCode === 13) {
-            this.getBooks();
-        }
+    let onKeyDown = (e) => {
+        if (e.keyCode === 13)getBooks();
+
     }
-    onCategoryChange = (e) => {
+    let onCategoryChange = (e) => {
         let select = e.target.value;
-        this.props.setCategory(select);
+        props.setCategory(select);
     }
-    onSortingChange = e => {
+    let onSortingChange = e => {
         let sort = e.target.value;
-        this.props.setSortingType(sort);
+        props.setSortingType(sort);
     }
 
-    render() {
+
         return (
             <SearchArea
-                getBooks={this.getBooks}
-                onCategoryChange={this.onCategoryChange}
-                onSortingChange={this.onSortingChange}
-                onQueryChange={this.onQueryChange}
-                onKeyDown={this.onKeyDown}
+                getBooks={getBooks}
+                onCategoryChange={onCategoryChange}
+                onSortingChange={onSortingChange}
+                onQueryChange={onQueryChange}
+                onKeyDown={onKeyDown}
             />
         )
-    }
+
 }
 
 let mapStateToProps = (state) => {
@@ -73,9 +72,9 @@ let mapStateToProps = (state) => {
         k: state.booksPage.k
     }
 }
-const SearchAreaContainer = connect(mapStateToProps, {
+
+
+export default connect(mapStateToProps, {
     setBooks, setTotalBooksCount, toggleIsFetching, updateNewQuery,
     setCategory, setStartIndex, setSortingType, setPage
-})(SearchAreaAPI);
-
-export default SearchAreaContainer;
+})(SearchAreaContainer);
