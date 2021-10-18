@@ -1,4 +1,4 @@
-import {BookListAPI, SearchAreaAPI} from "../components/API/api";
+
 
 const SET_BOOKS = 'SET_BOOKS';
 const SET_TOTAL_BOOKS_COUNT = 'SET_TOTAL_BOOKS_COUNT';
@@ -96,33 +96,20 @@ export const setSortingType = (sortingType) => ({type: SET_SORTING_TYPE, sorting
 export const setBook = (book) => ({type: SET_BOOK, book});
 export const setPage = (page) => ({type: PAGE, page});
 
-export const getBooks = (query, category, maxResults, sortingType, k) => {
-    return (dispatch) => {
-        dispatch(toggleIsFetching(true));
-        SearchAreaAPI.getBooks(query, category, maxResults, sortingType, k)
-            .then(
-                data => {
-                    dispatch(toggleIsFetching(false));
-                    dispatch(setPage('list'));
-                    dispatch(setBooks(data.items === undefined ? [] : data.items));
-                    dispatch(setTotalBooksCount(data.totalItems));
-                    dispatch(setStartIndex(31));
-                }
-            )
-    }
-}
+// export const getBooks = (query, category, maxResults, sortingType, k) => {
+//     return (dispatch) => {
+//         dispatch(toggleIsFetching(true));
+//         SearchAreaAPI.getBooks(query, category, maxResults, sortingType, k)
+//             .then(
+//                 data => {
+//                     dispatch(toggleIsFetching(false));
+//                     dispatch(setPage('list'));
+//                     dispatch(setBooks(data.items === undefined ? [] : data.items));
+//                     dispatch(setTotalBooksCount(data.totalItems));
+//                     dispatch(setStartIndex(31));
+//                 }
+//             )
+//     }
+// }
 
-export const loadMoreBooks = (query, maxResults, startIndex, sortingType, k) => {
-    return (dispatch) => {
-        dispatch(toggleIsFetching(true));
-        BookListAPI.loadMore(query, maxResults, startIndex, sortingType, k)
-            .then(
-                data => {
-                    dispatch(toggleIsFetching(false));
-                    dispatch(setStartIndex(startIndex + 30));
-                    dispatch(loadMoreBooksSuccess(data.items));
-                }
-            )
-    }
-}
 export default booksReducer;
